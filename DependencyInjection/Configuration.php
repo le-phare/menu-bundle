@@ -1,6 +1,6 @@
 <?php
 
-namespace Horrorin\Bundle\MenuBuilderBundle\DependencyInjection;
+namespace LePhare\Bundle\MenuBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -19,7 +19,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('horrorin_menu_builder');
+        $rootNode = $treeBuilder->root('lephare_menu');
 
         $rootNode
             ->children()

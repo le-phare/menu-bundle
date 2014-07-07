@@ -1,7 +1,7 @@
 {
-    "name": "horrorin/menu-builder-bundle",
+    "name": "lephare/menu-bundle",
     "type": "symfony-bundle",
-    "description": "Menu Builder Bundle based on KnpMenu",
+    "description": "Menu Bundle based on KnpMenu",
     "keywords": ["Menu"],
     "license": "MIT",
     "authors": [
@@ -17,8 +17,8 @@
         "knplabs/knp-menu-bundle": "1.*"
     },
     "autoload": {
-        "psr-0": { "Horrorin\\Bundle\\MenuBuilderBundle": "" }
+        "psr-0": { "LePhare\\Bundle\\MenuBuilderBundle": "" }
     },
-    "target-dir": "Horrorin/Bundle/MenuBuilderBundle",
+    "target-dir": "LePhare/Bundle/MenuBuilderBundle",
     "minimum-stability": "dev"
 }

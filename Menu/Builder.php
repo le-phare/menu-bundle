@@ -1,6 +1,6 @@
 <?php
 
-namespace Horrorin\Bundle\MenuBuilderBundle\Menu;
+namespace LePhare\Bundle\MenuBundle\Menu;
 
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
@@ -15,7 +15,7 @@ class Builder extends ContainerAware
     {
         $factory = $this->container->get('knp_menu.factory');
 
-        $menuConfig = $this->container->getParameter('horrorin_menubuilder.menus');
+        $menuConfig = $this->container->getParameter('lephare_menu.menus');
         foreach ($menuConfig as $menuName => $definition) {
             if ($name === lcfirst($this->container->camelize($menuName)) . 'Menu') {
                 if (count($menu = $definition['definition']) !== 1) {

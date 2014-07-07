@@ -1,4 +1,4 @@
 parameters:
-    horrorin_menubuilder_class: Horrorin\Bundle\MenuBuilderBundle\Menu\Builder
+    lephare_menu_builder_class: LePhare\Bundle\MenuBundle\Menu\Builder
 
 services:

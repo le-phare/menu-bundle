@@ -1,6 +1,6 @@
 <?php
 
-namespace Horrorin\Bundle\MenuBuilderBundle\DependencyInjection;
+namespace LePhare\Bundle\MenuBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -12,7 +12,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class HorrorinMenuBuilderExtension extends Extension
+class LePhareMenuExtension extends Extension
 {
     /**
      * {@inheritDoc}
@@ -25,6 +25,6 @@ class HorrorinMenuBuilderExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
-        $container->setParameter('horrorin_menubuilder.menus', $config['menus']);
+        $container->setParameter('lephare_menu.menus', $config['menus']);
     }
 }

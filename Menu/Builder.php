@@ -11,6 +11,7 @@ use Symfony\Component\Yaml\Parser;
 class Builder extends ContainerAware
 {
     protected $reservedRole = null;
+    protected $config = null;
 
     public function getMenu()
     {
@@ -71,9 +72,16 @@ class Builder extends ContainerAware
         }
     }
 
+    public function setConfig($config)
+    {
+        $this->config = $config;
+
+        return $this;
+    }
+
     protected function getConfig()
     {
-        return $this->container->getParameter('kernel.root_dir') . '/Resources/' . 'menu.yml';
+        return null !== $this->config ? $this->config : $this->container->getParameter('kernel.root_dir') . '/Resources/' . 'menu.yml';
     }
 
     protected function addChildren(ItemInterface $menu, array $children)

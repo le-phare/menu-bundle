@@ -21,31 +21,6 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('lephare_menu');
 
-        $rootNode
-            ->children()
-                ->arrayNode('menus')
-                    ->prototype('array')
-                        ->children()
-                            ->arrayNode('options')
-                                ->children()
-                                    ->booleanNode('remove_empty')->defaultValue(true)->end()
-                                    ->scalarNode('reserved_role')->end()
-                                ->end()
-                            ->end()
-                            ->variableNode('definition')
-                                ->isRequired()
-                                ->defaultValue([])
-                                ->validate()
-                                    ->ifTrue(function($element) { return !is_array($element); })
-                                    ->thenInvalid('The menu element must be an array.')
-                                ->end()
-                            ->end()
-                        ->end()
-                    ->end()
-                ->end()
-            ->end()
-        ;
-
         return $treeBuilder;
     }
 }

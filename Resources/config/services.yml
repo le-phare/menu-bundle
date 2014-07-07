@@ -1,0 +1,4 @@
+parameters:
+    horrorin_menubuilder_class: Horrorin\Bundle\MenuBuilderBundle\Menu\Builder
+
+services:

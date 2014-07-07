@@ -1,0 +1,24 @@
+{
+    "name": "horrorin/menu-builder-bundle",
+    "type": "symfony-bundle",
+    "description": "Menu Builder Bundle based on KnpMenu",
+    "keywords": ["Menu"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Blake ETEME",
+            "email": "blake.eteme@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+
+        "knplabs/knp-menu": "1.*",
+        "knplabs/knp-menu-bundle": "1.*"
+    },
+    "autoload": {
+        "psr-0": { "Horrorin\\Bundle\\MenuBuilderBundle": "" }
+    },
+    "target-dir": "Horrorin/Bundle/MenuBuilderBundle",
+    "minimum-stability": "dev"
+}

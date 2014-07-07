@@ -1,4 +1,4 @@
 parameters:
-    lephare_menu_builder_class: LePhare\Bundle\MenuBundle\Menu\Builder
+    lephare_menu_builder_class: Lephare\Bundle\MenuBundle\Menu\Builder
 
 services:

@@ -1,6 +1,6 @@
 <?php
 
-namespace LePhare\Bundle\MenuBundle\Menu;
+namespace Lephare\Bundle\MenuBundle\Menu;
 
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;

@@ -17,8 +17,8 @@
         "knplabs/knp-menu-bundle": "1.*"
     },
     "autoload": {
-        "psr-0": { "LePhare\\Bundle\\MenuBundle": "" }
+        "psr-0": { "Lephare\\Bundle\\MenuBundle": "" }
     },
-    "target-dir": "LePhare/Bundle/MenuBundle",
+    "target-dir": "Lephare/Bundle/MenuBundle",
     "minimum-stability": "dev"
 }

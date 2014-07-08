@@ -2,16 +2,15 @@
 
 namespace Lephare\Bundle\MenuBundle\Configuration\NodeProcessor;
 
-use Knp\Menu\MenuFactory;
-use Lephare\Bundle\MenuBundle\Configuration\ConfigurationQueue;
+use Knp\Menu\FactoryInterface;
+use Knp\Menu\ItemInterface;
+use Lephare\Bundle\MenuBundle\Configuration\ConfigurationPriorityList;
 use Lephare\Bundle\MenuBundle\Configuration\NodeProcessor\NodeProcessorInterface;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\Finder\Finder;
 
 class NodeProcessor extends ContainerAware
 {
-    protected $processors;
-
     protected static $instance = false;
     protected static $excluded = [
         'AbstractNodeProcessor.php',
@@ -19,10 +18,10 @@ class NodeProcessor extends ContainerAware
         'NodeProcessorInterface.php',
     ];
 
-    public function __construct()
+    public function getProcessors()
     {
         $finder = new Finder;
-        $this->processors = new ConfigurationQueue;
+        $processors = new ConfigurationPriorityList;
 
         $files = $finder->files()
             ->in(__DIR__)
@@ -36,9 +35,11 @@ class NodeProcessor extends ContainerAware
         foreach ($files as $file) {
             $class = __NAMESPACE__ . '\\' . $file->getBasename('.php');
             if (($processor = new $class) instanceof NodeProcessorInterface) {
-                $this->processors->insert($processor, $processor->getPriority());
+                $processors->insert($processor->getName(), $processor, $processor->getPriority());
             }
         }
+
+        return $processors;
     }
 
     public static function getInstance()
@@ -50,35 +51,34 @@ class NodeProcessor extends ContainerAware
         return self::$instance;
     }
 
-    public function getProcessors()
+    public function process(array $configuration, ConfigurationPriorityList $processors = null, FactoryInterface $factory = null, ItemInterface $node = null)
     {
-        return $this->processors;
-    }
-
-    public function process(array $configuration, MenuFactory $factory = null, ItemInterface $node = null)
-    {
-        if (null === $factory) {
-            $factory = $this->container->get('knp_menu.factory');
-            $configuration = current($this->enhancedConfiguration($configuration));
+        if (null === $processors) {
+            $processors = $this->getProcessors();
         }
 
-        var_dump($configuration);
-        foreach ($this->processors as $processor) {
+        if (null === $factory) {
+            $factory = $this->container->get('knp_menu.factory');
+            $this->enhancedConfiguration($configuration);
+            $configuration = reset($configuration);
+        }
+
+        foreach ($processors as $processor) {
             $used = false;
             foreach ($configuration as $key => $value) {
+                var_dump($key, $value, $processor->getName());
                 if ($key === $processor->getName() || in_array($key, $processor->getAliases())) {
+                    var_dump($key);
                     $used = true;
 
                     if (false === $processor->validate($value)) {
                         throw new \InvalidArgumentException("Invalid configuration for node \"{$processor->getName()}\".");
                     }
 
-                    $processor->process($value, $factory, $node);
-
-                    // var_dump($node);
+                    $processor->process($value, $processors, $factory, $node);
                 }
+                var_dump('__________');
             }
-            // var_dump($processor->getName());
             if (!$used && $processor->isRequired()) {
                 throw new \InvalidArgumentException("Node \"{$processor->getName()}\" must be defined.");
             }
@@ -87,23 +87,22 @@ class NodeProcessor extends ContainerAware
         return $node;
     }
 
-    protected function enhancedConfiguration(array $configuration)
+    protected function enhancedConfiguration(array &$configuration)
     {
-        // foreach ($configuration as &$item) {
-        //     if (is_array($item)) {
-        //         $item = $this->enhancedConfiguration($item);
-        //     } else {
-        //         if ('@' === $item[0]) {
-        //             $item = $this->container->get(substr($item, 1, strlen($item)));
-        //         } elseif (!!preg_match('/^%\w+%$/', $item, $matches)) {
-        //             var_dump($matches);
-        //             $item = $matches[1];
-        //         } else {
-        //             $item = $item;
-        //         }
-        //     }
-        // }
-
-        return $configuration;
+        foreach ($configuration as &$item) {
+            if (is_array($item)) {
+                $this->enhancedConfiguration($item);
+            } else {
+                if ('@' === $item[0]) {
+                    $item = $this->container->get(substr($item, 1));
+                } elseif (!!preg_match_all('/%[A-Za-z0-9_\-\.]+%/', $item, $matches)) {
+                    $replace = [];
+                    foreach ($matches[0] as $match) {
+                        $replace[] = $this->container->getParameter(trim($match, '%'));
+                    }
+                    $item = str_replace($matches[0], $replace, $item);
+                }
+            }
+        }
     }
 }

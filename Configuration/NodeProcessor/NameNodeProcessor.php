@@ -2,7 +2,30 @@
 
 namespace Lephare\Bundle\MenuBundle\Configuration\NodeProcessor;
 
-class NameNodeProcessor
-{
+use Knp\Menu\FactoryInterface;
+use Knp\Menu\ItemInterface;
+use Lephare\Bundle\MenuBundle\Configuration\ConfigurationPriorityList;
 
+class NameNodeProcessor extends AbstractNodeProcessor implements NodeProcessorInterface
+{
+    public function getName()
+    {
+        return 'name';
+    }
+
+    public function process($configuration, ConfigurationPriorityList $processors, FactoryInterface $factory, ItemInterface &$node = null)
+    {
+        if (null === $node) {
+            return false;
+        }
+
+        var_dump($configuration);
+
+        $node->setName($configuration);
+    }
+
+    public function getPriority()
+    {
+        return 1;
+    }
 }

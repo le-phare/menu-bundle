@@ -22,8 +22,12 @@ class Builder
 
     public function build()
     {
-        $this->processor->process($this->configuration);
+        $node = $this->processor->process($this->configuration);
+
         die;
+        var_dump($node->toArray());
+
+        return $node;
     }
 
     // protected $reservedRole = null;

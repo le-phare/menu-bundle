@@ -2,8 +2,9 @@
 
 namespace Lephare\Bundle\MenuBundle\Configuration\NodeProcessor;
 
+use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
-use Knp\Menu\MenuFactory;
+use Lephare\Bundle\MenuBundle\Configuration\ConfigurationPriorityList;
 
 class RegisterNodeProcessor extends AbstractNodeProcessor implements NodeProcessorInterface
 {
@@ -12,13 +13,13 @@ class RegisterNodeProcessor extends AbstractNodeProcessor implements NodeProcess
         return 'register';
     }
 
-    public function process(array $configuration, MenuFactory $factory = null, ItemInterface &$node = null)
+    public function process($configuration, ConfigurationPriorityList $processors, FactoryInterface $factory, ItemInterface &$node = null)
     {
         $processors = NodeProcessor::getInstance()->getProcessors();
 
         foreach ($configuration as $processor) {
             if ($processor instanceof NodeProcessorInterface) {
-                $processors->insert($processor, $processor->getPriority());
+                $processors->insert($processor->getName(), $processor, $processor->getPriority());
             }
         }
 

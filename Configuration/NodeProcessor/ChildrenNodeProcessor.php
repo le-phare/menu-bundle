@@ -2,8 +2,10 @@
 
 namespace Lephare\Bundle\MenuBundle\Configuration\NodeProcessor;
 
+use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
-use Knp\Menu\MenuFactory;
+use Knp\Menu\MenuItem;
+use Lephare\Bundle\MenuBundle\Configuration\ConfigurationPriorityList;
 
 class ChildrenNodeProcessor extends AbstractNodeProcessor implements NodeProcessorInterface
 {
@@ -17,9 +19,30 @@ class ChildrenNodeProcessor extends AbstractNodeProcessor implements NodeProcess
         return [ 'menu' ];
     }
 
-    public function process(array $configuration, MenuFactory $factory = null, ItemInterface &$node = null)
+    public function process($configuration, ConfigurationPriorityList $processors, FactoryInterface $factory, ItemInterface &$node = null)
     {
-        // var_dump($configuration);
+        if (null === $factory) {
+            return false;
+        }
+
+        foreach ($configuration as $child) {
+            if (is_callable($child)) {
+                call_user_func_array($child, [ $node ]);
+            } else {
+                $menuItem = new MenuItem('menu', $factory);
+
+                // $processors->rewind();
+                NodeProcessor::getInstance()->process($child, $processors, $factory, $menuItem);
+
+                if (null === $node) {
+                    var_dump($menuItem);
+                    die;
+                    $node = $menuItem;
+                } else {
+                    $node->addChild($menuItem);
+                }
+            }
+        }
     }
 
     public function getPriority()
@@ -29,6 +52,6 @@ class ChildrenNodeProcessor extends AbstractNodeProcessor implements NodeProcess
 
     public function validate($config)
     {
-        return is_array($config) && !!count($config);
+        return is_callable($config) || (is_array($config) && !!count($config));
     }
 }

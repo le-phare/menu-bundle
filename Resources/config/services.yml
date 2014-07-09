@@ -1,4 +1,18 @@
 parameters:
+
     lephare_menu_builder_class: Lephare\Bundle\MenuBundle\Menu\Builder
+    lephare.menu.configuration.provider_class: Lephare\Bundle\MenuBundle\Configuration\Provider\Provider
+    lephare.menu.configuration.node_processor_class: Lephare\Bundle\MenuBundle\Configuration\NodeProcessor\NodeProcessor
+    lephare.menu.route_voter.class: Lephare\Bundle\MenuBundle\Menu\Voter\RouteVoter
 
 services:
+
+    lephare.menu.configuration.provider:
+        class: '%lephare.menu.configuration.provider_class%'
+
+    lephare.menu.configuration.node_processor:
+        class: '%lephare.menu.configuration.node_processor_class%'
+        factory_class: '%lephare.menu.configuration.node_processor_class%'
+        factory_method: getInstance
+        calls: [[ setContainer, [ @service_container ]]]
+

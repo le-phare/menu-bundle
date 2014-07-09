@@ -19,13 +19,11 @@ class NameNodeProcessor extends AbstractNodeProcessor implements NodeProcessorIn
             return false;
         }
 
-        var_dump($configuration);
-
         $node->setName($configuration);
     }
 
     public function getPriority()
     {
-        return 1;
+        return 10;
     }
 }

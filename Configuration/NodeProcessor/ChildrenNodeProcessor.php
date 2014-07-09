@@ -29,14 +29,11 @@ class ChildrenNodeProcessor extends AbstractNodeProcessor implements NodeProcess
             if (is_callable($child)) {
                 call_user_func_array($child, [ $node ]);
             } else {
-                $menuItem = new MenuItem('menu', $factory);
+                $menuItem = $factory->createItem('menu');
 
-                // $processors->rewind();
                 NodeProcessor::getInstance()->process($child, $processors, $factory, $menuItem);
 
                 if (null === $node) {
-                    var_dump($menuItem);
-                    die;
                     $node = $menuItem;
                 } else {
                     $node->addChild($menuItem);
@@ -47,7 +44,7 @@ class ChildrenNodeProcessor extends AbstractNodeProcessor implements NodeProcess
 
     public function getPriority()
     {
-        return 10;
+        return 30;
     }
 
     public function validate($config)

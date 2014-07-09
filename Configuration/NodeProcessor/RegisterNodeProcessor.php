@@ -28,7 +28,7 @@ class RegisterNodeProcessor extends AbstractNodeProcessor implements NodeProcess
 
     public function getPriority()
     {
-        return -1;
+        return 0;
     }
 
     public function validate($config)

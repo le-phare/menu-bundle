@@ -22,6 +22,7 @@ class NodeProcessor extends ContainerAware
     {
         $finder = new Finder;
         $processors = new ConfigurationPriorityList;
+        $processors->rewind();
 
         $files = $finder->files()
             ->in(__DIR__)
@@ -66,9 +67,7 @@ class NodeProcessor extends ContainerAware
         foreach ($processors as $processor) {
             $used = false;
             foreach ($configuration as $key => $value) {
-                var_dump($key, $value, $processor->getName());
                 if ($key === $processor->getName() || in_array($key, $processor->getAliases())) {
-                    var_dump($key);
                     $used = true;
 
                     if (false === $processor->validate($value)) {
@@ -77,7 +76,6 @@ class NodeProcessor extends ContainerAware
 
                     $processor->process($value, $processors, $factory, $node);
                 }
-                var_dump('__________');
             }
             if (!$used && $processor->isRequired()) {
                 throw new \InvalidArgumentException("Node \"{$processor->getName()}\" must be defined.");

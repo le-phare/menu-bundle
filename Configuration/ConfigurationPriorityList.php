@@ -144,26 +144,7 @@ class ConfigurationPriorityList implements Iterator, Countable
      */
     protected function compare(array $item1, array $item2)
     {
-        return ($item1['priority'] === $item2['priority'])
-            ? ($item1['serial']   > $item2['serial']   ? -1 : 1) * $this->isLIFO
-            : ($item1['priority'] > $item2['priority'] ? -1 : 1);
-    }
-
-    /**
-     * Get/Set serial order mode
-     *
-     * @param bool $flag
-     * @return bool
-     */
-    public function isLIFO($flag = null)
-    {
-        if ($flag !== null) {
-            if (($flag = ($flag === true ? 1 : -1)) !== $this->isLIFO) {
-                $this->isLIFO = $flag;
-                $this->sorted = false;
-            }
-        }
-        return $this->isLIFO === 1;
+        return ($item1['priority'] === $item2['priority']) ? 0 : ($item1['priority'] < $item2['priority'] ? -1 : 1);
     }
 
     /**

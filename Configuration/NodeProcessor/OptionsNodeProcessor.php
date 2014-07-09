@@ -5,6 +5,8 @@ namespace Lephare\Bundle\MenuBundle\Configuration\NodeProcessor;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Lephare\Bundle\MenuBundle\Configuration\ConfigurationPriorityList;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class OptionsNodeProcessor extends AbstractNodeProcessor implements NodeProcessorInterface
 {
@@ -15,33 +17,31 @@ class OptionsNodeProcessor extends AbstractNodeProcessor implements NodeProcesso
 
     public function process($configuration, ConfigurationPriorityList $processors, FactoryInterface $factory, ItemInterface &$node = null)
     {
-        // var_dump($configuration);
-        // TODO use OptionResolver
+        if (!is_array($configuration)) {
+            return false;
+        }
+
+        $resolver = new OptionsResolver;
+        $this->setDefaultOptions($resolver);
+
+        $options = $resolver->resolve($configuration);
+        $this->configureItem($node, $options);
     }
 
-    /**
-     * Builds the full option array used to configure the item.
-     *
-     * @param array $options
-     *
-     * @return array
-     */
-    protected function buildOptions(array $options)
+    protected function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        return array_merge(
-            [
-                'uri' => null,
-                'label' => null,
-                'attributes' => array(),
-                'linkAttributes' => array(),
-                'childrenAttributes' => array(),
-                'labelAttributes' => array(),
-                'extras' => array(),
-                'display' => true,
-                'displayChildren' => true,
-            ],
-            $options
-        );
+        $resolver->setDefaults([
+            'uri' => null,
+            'label' => null,
+            'attributes' => array(),
+            'linkAttributes' => array(),
+            'childrenAttributes' => array(),
+            'labelAttributes' => array(),
+            'extras' => array(),
+            'display' => true,
+            'displayChildren' => true,
+            'route' => null,
+        ]);
     }
 
     /**
@@ -67,6 +67,6 @@ class OptionsNodeProcessor extends AbstractNodeProcessor implements NodeProcesso
 
     public function getPriority()
     {
-        return 9;
+        return 20;
     }
 }

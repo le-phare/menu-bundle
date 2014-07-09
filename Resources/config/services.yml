@@ -16,8 +16,3 @@ services:
         factory_method: getInstance
         calls: [[ setContainer, [ @service_container ]]]
 
-    lephare.menu.route_voter:
-        class: %lephare.menu.route_voter.class%
-        tags:
-            - { name: "knp_menu.voter" , request: true }
-

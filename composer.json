@@ -15,7 +15,7 @@
 
         "knplabs/knp-menu": "1.*",
         "knplabs/knp-menu-bundle": "1.*",
-        "symfony/finder": "1.*",
+        "symfony/finder": "dev-master",
         "symfony/framework-bundle": ">=2.3"
     },
     "autoload": {

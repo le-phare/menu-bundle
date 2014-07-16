@@ -2,7 +2,10 @@
 
 namespace Lephare\Bundle\MenuBundle\Configuration\NodeProcessor;
 
-abstract class AbstractNodeProcessor implements NodeProcessorInterface
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
+abstract class AbstractNodeProcessor implements NodeProcessorInterface, ContainerAwareInterface
 {
     public function getAliases()
     {
@@ -22,5 +25,18 @@ abstract class AbstractNodeProcessor implements NodeProcessorInterface
     public function validate($config)
     {
         return true;
+    }
+
+    /**
+     * @{inheritDoc}
+     */
+    protected $container;
+
+    /**
+     * @{inheritDoc}
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
     }
 }

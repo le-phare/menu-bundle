@@ -5,9 +5,8 @@ namespace Lephare\Bundle\MenuBundle\Configuration\NodeProcessor;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Knp\Menu\MenuItem;
-use Lephare\Bundle\MenuBundle\Configuration\ConfigurationPriorityList;
 
-class ChildrenNodeProcessor extends AbstractNodeProcessor implements NodeProcessorInterface
+class ChildrenNodeProcessor extends AbstractNodeProcessor
 {
     public function getName()
     {
@@ -19,11 +18,14 @@ class ChildrenNodeProcessor extends AbstractNodeProcessor implements NodeProcess
         return [ 'menu' ];
     }
 
-    public function process($configuration, ConfigurationPriorityList $processors, FactoryInterface $factory, ItemInterface &$node = null)
+    public function process($configuration, array $processors, FactoryInterface $factory, ItemInterface &$node = null)
     {
         if (null === $factory) {
             return false;
         }
+
+        $nodeProcessor = new NodeProcessor;
+        $nodeProcessor->setContainer($this->container);
 
         foreach ($configuration as $child) {
             if (is_callable($child)) {
@@ -31,7 +33,7 @@ class ChildrenNodeProcessor extends AbstractNodeProcessor implements NodeProcess
             } else {
                 $menuItem = $factory->createItem('menu');
 
-                NodeProcessor::getInstance()->process($child, $processors, $factory, $menuItem);
+                $nodeProcessor->process($child, $processors, $factory, $menuItem);
 
                 if (null === $node) {
                     $node = $menuItem;

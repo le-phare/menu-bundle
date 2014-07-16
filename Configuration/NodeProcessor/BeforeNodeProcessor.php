@@ -4,9 +4,8 @@ namespace Lephare\Bundle\MenuBundle\Configuration\NodeProcessor;
 
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
-use Lephare\Bundle\MenuBundle\Configuration\ConfigurationPriorityList;
 
-class BeforeNodeProcessor extends AbstractNodeProcessor implements NodeProcessorInterface
+class BeforeNodeProcessor extends AbstractNodeProcessor
 {
     public function getName()
     {
@@ -18,19 +17,44 @@ class BeforeNodeProcessor extends AbstractNodeProcessor implements NodeProcessor
         return [];
     }
 
-    public function process($configuration, ConfigurationPriorityList $processors, FactoryInterface $factory, ItemInterface &$node = null)
+    public function process($configuration, array $processors, FactoryInterface $factory, ItemInterface &$node = null)
     {
-            var_dump($configuration);
-        foreach ($configuration as $nodeName => $nodeData) {
-            var_dump($node->getChildren());
-            if ($child = $node->getChild($nodeName)) {
-                var_dump($child);
-            } elseif ($children = $node->getChildren()) {
-                foreach ($children as $child) {
-                    $this->process($configuration, $processors, $factory, $child);
+        if (null === $factory) {
+            return false;
+        }
+
+        $childrenProcessor = $processors['children'];
+        foreach ($configuration as $name => $items) {
+            $submenu = $factory->createItem('node', []);
+            $childrenProcessor->process($items, $processors, $factory, $submenu);
+            if ($submenu->hasChildren()) {
+                foreach ($submenu->getChildren() as $submenuChild) {
+                    $submenuChild->setParent(null);
+                    $this->insertBefore($name, $node, $submenuChild);
+                }
+            }
+            unset($submenu);
+        }
+    }
+
+    protected function insertBefore($name, ItemInterface $menu, ItemInterface $node)
+    {
+        if ($menu->hasChildren()) {
+            if (null !== ($child = $menu->getChild($name))) {
+                $childName = $child->getName();
+                $order = array_keys($menu->getChildren());
+
+                $position = array_search($childName, $order);
+                $menu->addChild($node);
+                $node->moveToPosition($position);
+            } else {
+                foreach ($menu->getChildren() as $child) {
+                    $this->insertBefore($name, $child, $node);
                 }
             }
         }
+
+        return false;
     }
 
     public function getPriority()

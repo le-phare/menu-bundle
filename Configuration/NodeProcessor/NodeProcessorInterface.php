@@ -4,7 +4,6 @@ namespace Lephare\Bundle\MenuBundle\Configuration\NodeProcessor;
 
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
-use Lephare\Bundle\MenuBundle\Configuration\ConfigurationPriorityList;
 
 interface NodeProcessorInterface
 {
@@ -16,7 +15,7 @@ interface NodeProcessorInterface
 
     public function isRequired();
 
-    public function process($configuration, ConfigurationPriorityList $processors, FactoryInterface $factory, ItemInterface &$node = null);
+    public function process($configuration, array $processors, FactoryInterface $factory, ItemInterface &$node = null);
 
     public function validate($config);
 }

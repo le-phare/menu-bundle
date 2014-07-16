@@ -1,0 +1,42 @@
+main_nav:
+    # register:
+    #     - @faros.menu.processor.reserved_role
+    menu:
+        -
+            name: root
+            options:
+                attributes:
+                    id: 'sidebar'
+                childrenAttributes:
+                    class: 'nav acc-menu'
+                    id: 'sidebar'
+            remove_empty: true
+            reserved_role: ROLE_ADMIN
+            children:
+                -
+                    name: menu.dashboard
+                    options:
+                        route: 'admin_dashboard'
+                        extras:
+                            icon_class: 'fa fa-home'
+                - [ @faros.menu.provider, configureCatalogMenu ]
+                - [ @faros.menu.provider, configureCmsMenu ]
+                - [ @faros.menu.provider, configureMediaMenu ]
+                - [ @faros.menu.provider, configureSystemMenu ]
+            append:
+                menu.catalog:
+                    -
+                        name: menu.color_chart
+                        role: ROLE_ADMIN_COLORCHART_LIST
+                        options:
+                            route: 'fx_admin_color_chart_list'
+                    -
+                        name: menu.color
+                        role: ROLE_ADMIN_COLOR_LIST
+                        options:
+                            route: 'fx_admin_color_list'
+                    -
+                        name: menu.picto
+                        role: ROLE_ADMIN_PICTO_LIST
+                        options:
+                            route: 'fx_admin_picto_list'

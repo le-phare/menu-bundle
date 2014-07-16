@@ -5,11 +5,11 @@ namespace Lephare\Bundle\MenuBundle\Configuration\NodeProcessor;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 
-class NameNodeProcessor extends AbstractNodeProcessor implements NodeProcessorInterface
+class RoleNodeProcessor extends AbstractNodeProcessor
 {
     public function getName()
     {
-        return 'name';
+        return 'role';
     }
 
     public function process($configuration, array $processors, FactoryInterface $factory, ItemInterface &$node = null)
@@ -18,11 +18,11 @@ class NameNodeProcessor extends AbstractNodeProcessor implements NodeProcessorIn
             return false;
         }
 
-        $node->setName($configuration);
+        $node->setDisplay($this->container->get('security.context')->isGranted($configuration));
     }
 
     public function getPriority()
     {
-        return 10;
+        return 11;
     }
 }

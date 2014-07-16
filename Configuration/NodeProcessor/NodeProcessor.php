@@ -6,23 +6,35 @@ use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Lephare\Bundle\MenuBundle\Configuration\ConfigurationPriorityList;
 use Lephare\Bundle\MenuBundle\Configuration\NodeProcessor\NodeProcessorInterface;
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Finder\Finder;
 
-class NodeProcessor extends ContainerAware
+class NodeProcessor implements ContainerAwareInterface
 {
-    protected static $instance = false;
     protected static $excluded = [
         'AbstractNodeProcessor.php',
         'NodeProcessor.php',
         'NodeProcessorInterface.php',
     ];
 
+    /**
+     * @{inheritDoc}
+     */
+    protected $container;
+
+    /**
+     * @{inheritDoc}
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
+
     public function getProcessors()
     {
         $finder = new Finder;
-        $processors = new ConfigurationPriorityList;
-        $processors->rewind();
+        $processors = [];
 
         $files = $finder->files()
             ->in(__DIR__)
@@ -36,25 +48,26 @@ class NodeProcessor extends ContainerAware
         foreach ($files as $file) {
             $class = __NAMESPACE__ . '\\' . $file->getBasename('.php');
             if (($processor = new $class) instanceof NodeProcessorInterface) {
-                $processors->insert($processor->getName(), $processor, $processor->getPriority());
+                if ($processor instanceof ContainerAwareInterface) {
+                    $processor->setContainer($this->container);
+                }
+                $processors[$processor->getName()] = $processor;
             }
         }
+
+        uasort($processors, function ($a, $b) {
+            if ($a->getPriority() == $b->getPriority()) {
+                return 0;
+            }
+            return ($a->getPriority() < $b->getPriority()) ? -1 : 1;
+        });
 
         return $processors;
     }
 
-    public static function getInstance()
+    public function process(array $configuration, array $processors = [], FactoryInterface $factory = null, ItemInterface $node = null)
     {
-        if (false === self::$instance) {
-            self::$instance = new self;
-        }
-
-        return self::$instance;
-    }
-
-    public function process(array $configuration, ConfigurationPriorityList $processors = null, FactoryInterface $factory = null, ItemInterface $node = null)
-    {
-        if (null === $processors) {
+        if (!$processors) {
             $processors = $this->getProcessors();
         }
 

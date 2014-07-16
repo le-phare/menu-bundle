@@ -4,7 +4,6 @@ namespace Lephare\Bundle\MenuBundle\Configuration\NodeProcessor;
 
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
-use Lephare\Bundle\MenuBundle\Configuration\ConfigurationPriorityList;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\OptionsResolver\Options;
@@ -16,7 +15,7 @@ class OptionsNodeProcessor extends AbstractNodeProcessor implements NodeProcesso
         return 'options';
     }
 
-    public function process($configuration, ConfigurationPriorityList $processors, FactoryInterface $factory, ItemInterface &$node = null)
+    public function process($configuration, array $processors, FactoryInterface $factory, ItemInterface &$node = null)
     {
         if (!is_array($configuration)) {
             return false;
@@ -24,6 +23,9 @@ class OptionsNodeProcessor extends AbstractNodeProcessor implements NodeProcesso
 
         $resolver = new OptionsResolver;
         $this->setDefaultOptions($resolver);
+
+        $configuration = array_merge($node->toArray(), $configuration);
+        unset($configuration['name'], $configuration['label'], $configuration['children']);
 
         $options = $resolver->resolve($configuration);
         $options = $factory->createItem('node', $options)->toArray();

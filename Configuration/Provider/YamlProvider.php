@@ -10,10 +10,10 @@ class YamlProvider implements ProviderInterface
     {
         $parser = new Parser;
 
-        try {
+        if (is_string($data)) {
             return $parser->parse($data);
-        } catch (\Exception $e) {
-            return false;
         }
+
+        return false;
     }
 }

@@ -2,16 +2,15 @@
 
 namespace Lephare\Bundle\MenuBundle\Configuration\Provider;
 
-use Symfony\Component\Yaml\Parser;
+use Symfony\Component\Yaml\Yaml;
 
 class YamlProvider implements ProviderInterface
 {
     public function handle($data)
     {
-        $parser = new Parser;
 
         if (is_string($data)) {
-            return $parser->parse($data);
+            return Yaml::parse($data);
         }
 
         return false;

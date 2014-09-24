@@ -15,7 +15,7 @@ interface NodeProcessorInterface
 
     public function isRequired();
 
-    public function process($configuration, array $processors, FactoryInterface $factory, ItemInterface &$node = null);
+    public function process($configuration, array &$processors, FactoryInterface $factory, ItemInterface &$node = null);
 
     public function validate($config);
 }

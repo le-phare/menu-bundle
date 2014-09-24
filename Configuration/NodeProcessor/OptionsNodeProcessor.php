@@ -15,7 +15,12 @@ class OptionsNodeProcessor extends AbstractNodeProcessor implements NodeProcesso
         return 'options';
     }
 
-    public function process($configuration, array $processors, FactoryInterface $factory, ItemInterface &$node = null)
+    public function getAliases()
+    {
+        return [ 'extras' ];
+    }
+
+    public function process($configuration, array &$processors, FactoryInterface $factory, ItemInterface &$node = null)
     {
         if (!is_array($configuration)) {
             return false;

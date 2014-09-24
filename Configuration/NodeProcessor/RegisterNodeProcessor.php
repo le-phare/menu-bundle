@@ -12,15 +12,20 @@ class RegisterNodeProcessor extends AbstractNodeProcessor implements NodeProcess
         return 'register';
     }
 
-    public function process($configuration, array $processors, FactoryInterface $factory, ItemInterface &$node = null)
+    public function process($configuration, array &$processors, FactoryInterface $factory, ItemInterface &$node = null)
     {
-        $processors = NodeProcessor::getInstance()->getProcessors();
-
         foreach ($configuration as $processor) {
             if ($processor instanceof NodeProcessorInterface) {
-                $processors->insert($processor->getName(), $processor, $processor->getPriority());
+                $processors[$processor->getName()] = $processor;
             }
         }
+
+        uasort($processors, function ($a, $b) {
+            if ($a->getPriority() == $b->getPriority()) {
+                return 0;
+            }
+            return ($a->getPriority() < $b->getPriority()) ? -1 : 1;
+        });
 
         return $node;
     }

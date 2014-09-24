@@ -18,6 +18,8 @@ class NodeProcessor implements ContainerAwareInterface
         'NodeProcessorInterface.php',
     ];
 
+    // protected $processors = [];
+
     /**
      * @{inheritDoc}
      */
@@ -30,6 +32,13 @@ class NodeProcessor implements ContainerAwareInterface
     {
         $this->container = $container;
     }
+
+    // public function addProcessor(AbstractNodeProcessor $processor)
+    // {
+    //     $this->processors[$processor->getName()] = $processor;
+
+    //     return $this;
+    // }
 
     public function getProcessors()
     {
@@ -54,6 +63,8 @@ class NodeProcessor implements ContainerAwareInterface
                 $processors[$processor->getName()] = $processor;
             }
         }
+
+        // array_merge($processors, $this->processors);
 
         uasort($processors, function ($a, $b) {
             if ($a->getPriority() == $b->getPriority()) {

@@ -12,7 +12,7 @@ class NameNodeProcessor extends AbstractNodeProcessor implements NodeProcessorIn
         return 'name';
     }
 
-    public function process($configuration, array $processors, FactoryInterface $factory, ItemInterface &$node = null)
+    public function process($configuration, array &$processors, FactoryInterface $factory, ItemInterface &$node = null)
     {
         if (null === $node) {
             return false;

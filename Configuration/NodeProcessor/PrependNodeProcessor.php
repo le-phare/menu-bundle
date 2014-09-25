@@ -4,6 +4,7 @@ namespace Lephare\Bundle\MenuBundle\Configuration\NodeProcessor;
 
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
+use Knp\Menu\Util\MenuManipulator;
 
 class PrependNodeProcessor extends AbstractNodeProcessor
 {
@@ -39,10 +40,11 @@ class PrependNodeProcessor extends AbstractNodeProcessor
 
     protected function prepend($name, ItemInterface $menu, ItemInterface $node)
     {
+        $manipulator = new MenuManipulator;
         if ($menu->hasChildren()) {
             if (null !== ($child = $menu->getChild($name))) {
                 $child->addChild($node);
-                $node->moveToFirstPosition();
+                $manipulator->moveToFirstPosition($node);
             } else {
                 foreach ($menu->getChildren() as $child) {
                     $this->prepend($name, $child, $node);

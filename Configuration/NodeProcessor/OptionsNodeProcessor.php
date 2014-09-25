@@ -4,20 +4,21 @@ namespace Lephare\Bundle\MenuBundle\Configuration\NodeProcessor;
 
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
+use Knp\Menu\Util\MenuManipulator;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\OptionsResolver\Options;
 
 class OptionsNodeProcessor extends AbstractNodeProcessor implements NodeProcessorInterface
 {
     public function getName()
     {
-        return 'options';
+        return 'extras';
     }
 
     public function getAliases()
     {
-        return [ 'extras' ];
+        return [ 'options' ];
     }
 
     public function process($configuration, array &$processors, FactoryInterface $factory, ItemInterface &$node = null)
@@ -27,13 +28,14 @@ class OptionsNodeProcessor extends AbstractNodeProcessor implements NodeProcesso
         }
 
         $resolver = new OptionsResolver;
+        $manipulator = new MenuManipulator;
         $this->setDefaultOptions($resolver);
 
-        $configuration = array_merge($node->toArray(), $configuration);
+        $configuration = array_merge($manipulator->toArray($node), $configuration);
         unset($configuration['name'], $configuration['label'], $configuration['children']);
 
         $options = $resolver->resolve($configuration);
-        $options = $factory->createItem('node', $options)->toArray();
+        $options = $manipulator->toArray($factory->createItem($node->getName(), $options));
 
         $this->configureItem($node, $options);
     }
@@ -53,6 +55,7 @@ class OptionsNodeProcessor extends AbstractNodeProcessor implements NodeProcesso
                 'route' => null,
                 'routeParameters' => [],
                 'extras' => [],
+                'current' => null,
             ])
 
             ->setAllowedTypes([
@@ -67,6 +70,7 @@ class OptionsNodeProcessor extends AbstractNodeProcessor implements NodeProcesso
                 'route' => [ 'null', 'string' ],
                 'routeParameters' => 'array',
                 'extras' => 'array',
+                'current' => [ 'bool', 'null' ],
             ])
         ;
     }

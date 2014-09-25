@@ -4,6 +4,7 @@ namespace Lephare\Bundle\MenuBundle\Configuration\NodeProcessor;
 
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
+use Knp\Menu\Util\MenuManipulator;
 
 class AppendNodeProcessor extends AbstractNodeProcessor
 {
@@ -39,10 +40,11 @@ class AppendNodeProcessor extends AbstractNodeProcessor
 
     protected function append($name, ItemInterface $menu, ItemInterface $node)
     {
+        $manipulator = new MenuManipulator;
         if ($menu->hasChildren()) {
             if (null !== ($child = $menu->getChild($name))) {
                 $child->addChild($node);
-                $node->moveToLastPosition();
+                $manipulator->moveToLastPosition($node);
             } else {
                 foreach ($menu->getChildren() as $child) {
                     $this->append($name, $child, $node);

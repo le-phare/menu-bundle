@@ -4,6 +4,7 @@ namespace Lephare\Bundle\MenuBundle\Configuration\NodeProcessor;
 
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
+use Knp\Menu\Util\MenuManipulator;
 
 class AfterNodeProcessor extends AbstractNodeProcessor
 {
@@ -39,6 +40,7 @@ class AfterNodeProcessor extends AbstractNodeProcessor
 
     protected function insertAfter($name, ItemInterface $menu, ItemInterface $node)
     {
+        $manipulator = new MenuManipulator;
         if ($menu->hasChildren()) {
             if (null !== ($child = $menu->getChild($name))) {
                 $childName = $child->getName();
@@ -46,7 +48,7 @@ class AfterNodeProcessor extends AbstractNodeProcessor
 
                 $position = array_search($childName, $order);
                 $menu->addChild($node);
-                $node->moveToPosition(++$position);
+                $manipulator->moveToPosition($node, ++$position);
             } else {
                 foreach ($menu->getChildren() as $child) {
                     $this->insertAfter($name, $child, $node);

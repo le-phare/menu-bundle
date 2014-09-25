@@ -33,13 +33,6 @@ class NodeProcessor implements ContainerAwareInterface
         $this->container = $container;
     }
 
-    // public function addProcessor(AbstractNodeProcessor $processor)
-    // {
-    //     $this->processors[$processor->getName()] = $processor;
-
-    //     return $this;
-    // }
-
     public function getProcessors()
     {
         $finder = new Finder;
@@ -63,8 +56,6 @@ class NodeProcessor implements ContainerAwareInterface
                 $processors[$processor->getName()] = $processor;
             }
         }
-
-        // array_merge($processors, $this->processors);
 
         uasort($processors, function ($a, $b) {
             if ($a->getPriority() == $b->getPriority()) {

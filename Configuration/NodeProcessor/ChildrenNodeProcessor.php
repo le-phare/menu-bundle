@@ -27,11 +27,14 @@ class ChildrenNodeProcessor extends AbstractNodeProcessor
         $nodeProcessor = new NodeProcessor;
         $nodeProcessor->setContainer($this->container);
 
-        foreach ($configuration as $child) {
+        foreach ($configuration as $name => $child) {
             if (is_callable($child)) {
                 call_user_func_array($child, [ $node ]);
+            } elseif ($child instanceof ItemInterface) {
+                $node->addChild($child);
             } else {
-                $menuItem = $factory->createItem('menu');
+                $menuItem = $factory->createItem('node');
+                $child['name'] = !isset($child['name']) ? $name : $child['name'];
 
                 $nodeProcessor->process($child, $processors, $factory, $menuItem);
 

@@ -8,9 +8,12 @@ class YamlProvider implements ProviderInterface
 {
     public function handle($data)
     {
-
         if (is_string($data)) {
-            return Yaml::parse($data);
+            if (is_file($data)) {
+                return Yaml::parse($data);
+            } else {
+                throw new \Exception("File '$data' not found.");
+            }
         }
 
         return false;

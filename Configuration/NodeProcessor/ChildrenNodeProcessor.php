@@ -31,7 +31,7 @@ class ChildrenNodeProcessor extends AbstractNodeProcessor
             if (is_callable($child)) {
                 call_user_func_array($child, [ $node ]);
             } elseif ($child instanceof ItemInterface) {
-                $node->addChild($child);
+                $node->addChild($child->setName($name));
             } else {
                 $menuItem = $factory->createItem('node');
                 $child['name'] = !isset($child['name']) ? $name : $child['name'];

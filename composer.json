@@ -15,7 +15,7 @@
 
         "knplabs/knp-menu": "*",
         "knplabs/knp-menu-bundle": "*",
-        "symfony/framework-bundle": "~2.3"
+        "symfony/framework-bundle": "~2.3|~3.0"
     },
     "autoload": {
         "psr-0": { "Lephare\\Bundle\\MenuBundle": "" }
